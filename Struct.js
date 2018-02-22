@@ -84,7 +84,7 @@
   {/*数据结构*/
     if (this instanceof s === false)
     {
-      return new s();
+      return new s(structure);
     }
     var self = this;
     self._structure = structure;
