@@ -9,7 +9,7 @@ js下的数据结构定义工具
 
 ### 使用方式
 var s = new Struct({code: Struct.type.enum(1,2).default(1), deep: {msg: Struct.type.string.default('默认值')}});
-
 如上定义了一个object结构。 code只允许1或者2， msg必须是string。
 
-s.validate({code: 2}); 返回false。提示deep.msg: 必须是字符串
+s.validate({code: 2}); 返回false。// 提示deep.msg: 必须是字符串
+s.formatData({}); 根据数据结构返回默认数据结构, 若未设置default则改位置返回undefined.
