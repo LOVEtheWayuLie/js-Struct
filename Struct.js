@@ -43,7 +43,7 @@
   }
   function isBoolean(fn)
   {/*判断布尔*/
-     return getType(fn)=== 'boolean]';
+     return getType(fn)=== 'boolean';
   }
   function isArray(fn)
   {/*判断数组*/
@@ -59,8 +59,8 @@
   }
   function deepClone(data)
   {/*深度拷贝*/
-     var type = getType(data);
-     var obj;
+     var type = getType(data)
+       , obj;
      if(type === 'array'){
          obj = [];
      } else if(type === 'object'){
@@ -89,13 +89,11 @@
     var self = this;
     self._structure = structure;
   };
-  s.prototype._check = function (operation, st, data, k_name)
+  s.prototype._check = function (operation, st, data)
   {/*operation 有2中 formatData or validate*/
     var result = true
       , errors = []
-      , new_data = deepClone(data)
-      , now_data = new_data;
-    check(operation, st, data, k_name);
+      , new_data = check(st, data);
     for (var i=0; i<errors.length; i++)
     {
       console.log(errors[i]);
@@ -103,37 +101,49 @@
     self.errors = errors;
     if (operation === 'validate') return result;
     if (operation === 'formatData') return new_data;
-    function check(operation, st, data, k_name)
+    function check(st, data, k_name)
     {/*开始检查*/
-      for (var key in st)
-      {/*遍历结构*/
-        var type = st[key]
-          , v = data[key];
-        if (st[key] instanceof t)
-        {/*先判断是有效的type类型*/
-          for (var i=0; i<type._tasks.length; i++)
-          {/*遍历需要判断的类型*/
-            if (type._tasks[i](v) === false)
-            {
-              var name = type._tasks[i].__name__
-                , er = (k_name !== undefined? k_name + '.': '') + key + ' : ' + s.errorMap[name]
-                , df = type._default;
-              now_data[key] = df;
-              errors.push(er);
-              result = false;
-            }
-          }
-        } else if (isObject(st[key]))
-        {/*object深度遍历*/
-          var d= isObject(data[key]) === false ? {}: data[key];
-          if (isObject(data[key]) === false)
+      var obj;
+      if (st instanceof t)
+      {/*is type*/
+        var type = st;
+        for (var i=0; i<type._tasks.length; i++)
+        {/*遍历需要判断的类型*/
+          if (type._tasks[i](data) === false)
           {
-            new_data[key] = {};
-          };
-          now_data = new_data[key];
-          check(operation, st[key], d, k_name !== undefined? k_name + '.'+ key : key);
+            var name = type._tasks[i].__name__
+              , er = (k_name !== undefined? k_name: '') + ' : ' + s.errorMap[name]
+              , df = type._default;
+            errors.push(er);
+            result = false;
+            return df;
+          }
+        }
+        return data;
+      } else if (isObject( st))
+      {/*is obj*/
+        obj = {};
+      } else if (isArray( st))
+      {/*is array*/
+        obj = [];
+      } else { return data};
+
+      if (isObject( st))
+      {
+        if(!isObject(data)) data = {};
+        for(var key in st)
+        {
+          obj[key] = check(st[key], data[key], (k_name !== undefined? k_name + '.' + key: key))
+        }
+      } else if (isArray( st))
+      {
+        if(!isArray(data)) data = [];
+        for(var i=0; i<st.length; i++)
+        {
+          obj.push( check(st[i], data[i], (k_name !== undefined? k_name + '[' + i + ']': 'array['+i+']')))
         }
       }
+      return obj;
     }
   };
   s.prototype.formatData = function (data)
@@ -144,9 +154,8 @@
   s.prototype.validate = function (data)
   {/*验证数据*/
     var self = this
-      , struct = self._structure
       , result = true;
-    result = self._check('validate', struct, data);
+    result = self._check('validate', self._structure, data);
     return result;
   };
   var t = function ()
