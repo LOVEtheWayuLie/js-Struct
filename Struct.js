@@ -97,7 +97,8 @@
   };
   s.prototype._check = function (operation, st, data)
   {/*operation 有2中 formatData or validate*/
-    var result = true
+    var self = this
+      , result = true
       , errors = []
       , new_data = check(st, data);
     for (var i=0; i<errors.length; i++)
