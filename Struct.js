@@ -55,7 +55,13 @@
   }
   function isJsonString(fn)
   {/*判断json字符串*/
-     return isObject(JSON.parse(fn))=== true;
+     var r;
+     try {
+      r = JSON.parse(fn);
+     } catch (err) {
+      return false;
+     };
+     return isObject(r) || isArray(r);
   }
   function deepClone(data)
   {/*深度拷贝*/
@@ -246,7 +252,7 @@
   });
   t.method('jsonString', function (p)
   {/*json*/
-    return isJsonString === true;
+    return isJsonString(p) === true;
   });
   t.errorMap = {
   /*错误对照表*/
