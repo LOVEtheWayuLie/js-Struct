@@ -16,7 +16,7 @@ and so on...
 
 ### 数据结构
 您可以使用Struct.type 查看内置的数据类型.
-  已有的数据类型
+  > 已有的数据类型
   * enum
   * string
   * number
