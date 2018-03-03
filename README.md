@@ -66,9 +66,9 @@ js下的数据结构定义工具
 ```js
    var a = new Struct({
       statu: Struct.type.enum(0, 1).default(0),
-      statu: '0关闭, 1打开'
+      'statuExplain': '0关闭, 1打开'
   });
-  a.formatData(); // {statu: 0, statu: '0关闭, 1打开'}
+  a.formatData(); // {statu: 0, 'statuExplain': '0关闭, 1打开'}
 ```
 
 如果你传的值符合定义的结构，就会被保留下来。
