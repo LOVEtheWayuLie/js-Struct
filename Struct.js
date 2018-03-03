@@ -123,21 +123,25 @@
               , df = type._default;
             errors.push(er);
             result = false;
-            return df;
+            return deepClone(df);
           }
         }
         return data;
+      } else if (st instanceof s)
+      {/*is Struct*/
+        return check(st._structure, data, k_name)
       } else if (isObject( st))
       {/*is obj*/
         obj = {};
       } else if (isArray( st))
       {/*is array*/
         obj = [];
-      } else { return data};
+      } else { return deepClone(st)};
 
       if (isObject( st))
       {
         if(!isObject(data)) data = {};
+        obj = deepClone(data);
         for(var key in st)
         {
           obj[key] = check(st[key], data[key], (k_name !== undefined? k_name + '.' + key: key))
@@ -145,9 +149,10 @@
       } else if (isArray( st))
       {
         if(!isArray(data)) data = [];
+        obj = deepClone(data);
         for(var i=0; i<st.length; i++)
         {
-          obj.push( check(st[i], data[i], (k_name !== undefined? k_name + '[' + i + ']': 'array['+i+']')))
+          obj[i] =  check(st[i], data[i], (k_name !== undefined? k_name + '[' + i + ']': 'array['+i+']'))
         }
       }
       return obj;
