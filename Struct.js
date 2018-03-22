@@ -1,7 +1,19 @@
 /*=======================*/
 /*js数据结构*/
-"use strict";
-(function ()
+;"use strict";
+(function(root, factory)
+{
+  if (typeof module !== 'undefined' && module.exports)
+  {
+     module.exports = factory();
+  } else if (typeof define === 'function' && define.amd)
+  {
+    define(factory)
+  } else
+  {
+    root.Struct = factory();
+  }
+} (this, function ()
 {/*
   缩写解释
   t = type 数据类型
@@ -96,7 +108,7 @@
     self._structure = structure;
   };
   s.prototype._check = function (operation, st, data)
-  {/*operation 有2中 formatData or validate*/
+  {/*operation 有两种 formatData or validate*/
     var self = this
       , result = true
       , errors = []
@@ -281,5 +293,5 @@
   });
   s.define = t.method; //开放自定义接口
   s.errorMap = t.errorMap; //错误对照表
-  window.Struct = s;
-})();
+  return s
+}));
