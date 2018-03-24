@@ -1,7 +1,6 @@
 /*=======================*/
 /*js数据结构*/
-;"use strict";
-(function(root, factory)
+;(function(root, factory)
 {
   if (typeof module !== 'undefined' && module.exports)
   {
@@ -14,7 +13,8 @@
     root.Struct = factory();
   }
 } (this, function ()
-{/*
+{"use strict";
+/*
   缩写解释
   t = type 数据类型
   s = struct 数据结构
